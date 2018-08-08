@@ -80,62 +80,73 @@ api.get('/update', (req, res, next) => {
 
 api.get('/trigger', (req, res, next) => {
   if (req.query.pass === config.pass) {
-    const options = {
-      url: 'https://raw.githubusercontent.com/KomodoPlatform/Agama/dev/version_build',
-      method: 'GET',
-    };
+    let _indexPage = fs.readFileSync('./public/index.html', 'utf8');
 
-    request(options, (error, response, body) => {
-      if (response &&
-          response.statusCode &&
-          response.statusCode === 200) {
-        const _html =
-          `<html>
-            <head>
-              <title>Agama Linux Test Build ${body} in progress</title>
-            </head>
-            <body>Building...</body>
-          </html>`;
+    if (_indexPage.indexOf('Building') === -1) {
+      const options = {
+        url: 'https://raw.githubusercontent.com/KomodoPlatform/Agama/dev/version_build',
+        method: 'GET',
+      };
 
-        fs.writeFile('./public/index.html', _html, (err) => {
-          if (err) {
-            shepherd.log('error index update');
-          }
-        });
+      request(options, (error, response, body) => {
+        if (response &&
+            response.statusCode &&
+            response.statusCode === 200) {
+          const _html =
+            `<html>
+              <head>
+                <title>Agama Linux Test Build ${body} in progress</title>
+              </head>
+              <body>Building...</body>
+            </html>`;
 
-        const retObj = {
-          msg: 'success',
-          result: 'build started',
-        };
+          fs.writeFile('./public/index.html', _html, (err) => {
+            if (err) {
+              shepherd.log('error index update');
+            }
+          });
 
-        res.end(JSON.stringify(retObj));
+          const retObj = {
+            msg: 'success',
+            result: 'build started',
+          };
 
-        console.log(`remote version ${body}`);
+          res.end(JSON.stringify(retObj));
 
-        try {
-          fs.unlinkSync('./out.txt');
-        } catch (e) {}
+          console.log(`remote version ${body}`);
 
-        const spawnOut = fs.openSync('out.txt', 'a');
-        const spawnErr = fs.openSync('out.txt', 'a');
+          try {
+            fs.unlinkSync('./out.txt');
+          } catch (e) {}
 
-        spawn('./build.sh', [body], {
-          stdio: [
-            'ignore',
-            spawnOut,
-            spawnErr
-          ],
-          detached: true,
-        }).unref();
-      } else {
-        const errorObj = {
-          msg: 'error',
-          result: 'unable to get remote version',
-        };
+          const spawnOut = fs.openSync('out.txt', 'a');
+          const spawnErr = fs.openSync('out.txt', 'a');
 
-        res.end(JSON.stringify(errorObj));
-      }
-    });
+          spawn('./build.sh', [body], {
+            stdio: [
+              'ignore',
+              spawnOut,
+              spawnErr
+            ],
+            detached: true,
+          }).unref();
+        } else {
+          const errorObj = {
+            msg: 'error',
+            result: 'unable to get remote version',
+          };
+
+          res.end(JSON.stringify(errorObj));
+        }
+      });
+    } else {
+      const errorObj = {
+        msg: 'error',
+        result: 'another build job is in progress',
+      };
+
+      res.end(JSON.stringify(errorObj));
+    }
   } else {
     const errorObj = {
       msg: 'error',
