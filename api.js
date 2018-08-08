@@ -19,7 +19,7 @@ api.get('/status', (req, res, next) => {
       } else {
         const retObj = {
           msg: 'success',
-          result: data.replace('\n', '<br/>'),
+          result: data,
         };
 
         res.end(JSON.stringify(retObj));
