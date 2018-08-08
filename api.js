@@ -80,20 +80,6 @@ api.get('/update', (req, res, next) => {
 
 api.get('/trigger', (req, res, next) => {
   if (req.query.pass === config.pass) {
-    const _html =
-      `<html>
-        <head>
-          <title>Agama Linux Test Build ${body} in progress</title>
-        </head>
-        <body>Building...</body>
-      </html>`;
-
-    fs.writeFile('./public/index.html', _html, (err) => {
-      if (err) {
-        shepherd.log('error index update');
-      }
-    });
-
     const options = {
       url: 'https://raw.githubusercontent.com/KomodoPlatform/Agama/dev/version_build',
       method: 'GET',
@@ -103,6 +89,20 @@ api.get('/trigger', (req, res, next) => {
       if (response &&
           response.statusCode &&
           response.statusCode === 200) {
+        const _html =
+          `<html>
+            <head>
+              <title>Agama Linux Test Build ${body} in progress</title>
+            </head>
+            <body>Building...</body>
+          </html>`;
+
+        fs.writeFile('./public/index.html', _html, (err) => {
+          if (err) {
+            shepherd.log('error index update');
+          }
+        });
+
         const retObj = {
           msg: 'success',
           result: 'build started',
