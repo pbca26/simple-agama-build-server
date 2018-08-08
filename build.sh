@@ -1,4 +1,4 @@
-echo date
+date
 echo "Build started"
 rm -rf agama
 git clone https://github.com/komodoplatform/agama
@@ -38,5 +38,5 @@ cd ../../../
 zip -r Agama-linux-x64 Agama-linux-x64
 mv Agama-linux-x64.zip ../../public/Agama-linux-x64-v$1.zip
 curl http://:/api/update
-echo date
+date
 echo "Build finished"
