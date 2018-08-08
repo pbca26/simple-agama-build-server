@@ -117,7 +117,7 @@ api.get('/trigger', (req, res, next) => {
         const spawnOut = fs.openSync('out.txt', 'a');
         const spawnErr = fs.openSync('out.txt', 'a');
 
-        spawn('./build.sh', body, {
+        spawn('./build.sh', [body], {
           stdio: [
             'ignore',
             spawnOut,
