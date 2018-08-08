@@ -43,8 +43,22 @@ api.get('/trigger', (req, res, next) => {
     if (response &&
         response.statusCode &&
         response.statusCode === 200) {
+      const retObj = {
+        msg: 'success',
+        result: 'build started',
+      };
+
+      res.end(JSON.stringify(retObj));
+
       console.log(body);
-      exec(`./build.sh ${body}`);
+      exec(`./build.sh ${body} >> out.txt`);
+    } else {
+      const errorObj = {
+        msg: 'error',
+        result: 'unable to get remote version',
+      };
+
+      res.end(JSON.stringify(errorObj));
     }
   });
 });
