@@ -19,7 +19,7 @@ api.get('/status', (req, res, next) => {
       } else {
         const retObj = {
           msg: 'success',
-          result: data,
+          result: data.replace('\n', '<br/>'),
         };
 
         res.end(JSON.stringify(retObj));
@@ -47,7 +47,9 @@ api.get('/update', (req, res, next) => {
         response.statusCode === 200) {
       const _html =
         `<html>
-          <head>Agama Linux Test Build ${body}</head>
+          <head>
+            <title>Agama Linux Test Build ${body}</title>
+          </head>
           <body>
             <a href="http://${config.ip}:${config.port}/public/Agama-linux-x64-v${body}.zip">Agama-linux-x64-v${body}.zip</a>
           </body>
@@ -80,8 +82,10 @@ api.get('/trigger', (req, res, next) => {
   if (req.query.pass === config.pass) {
     const _html =
       `<html>
-        <head>Agama Linux Test Build ${body} in progress</head>
-        <body>Building</body>
+        <head>
+          <title>Agama Linux Test Build ${body} in progress</title>
+        </head>
+        <body>Building...</body>
       </html>`;
 
     fs.writeFile('./public/index.html', _html, (err) => {
