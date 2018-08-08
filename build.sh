@@ -1,5 +1,6 @@
 echo date
 echo "Build started"
+rm out.txt
 rm -rf agama
 git clone https://github.com/komodoplatform/agama
 cd agama

@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 const request = require('request');
 let api = express.Router();
 
@@ -51,7 +52,17 @@ api.get('/trigger', (req, res, next) => {
       res.end(JSON.stringify(retObj));
 
       console.log(body);
-      exec(`./build.sh ${body} >> out.txt`);
+      const spawnOut = fs.openSync('out.txt', 'a');
+      const spawnErr = fs.openSync('out.txt', 'a');
+
+      spawn('./build.sh', body, {
+        stdio: [
+          'ignore',
+          spawnOut,
+          spawnErr
+        ],
+        detached: true,
+      }).unref();
     } else {
       const errorObj = {
         msg: 'error',
