@@ -37,6 +37,6 @@ unzip -o patch.zip
 rm patch.zip
 cd ../../../
 zip -r Agama-linux-x64 Agama-linux-x64
-mv Agama-linux-x64.zip ../../Agama-linux-x64-v$1.zip
+mv Agama-linux-x64.zip ../../public/Agama-linux-x64-v$1.zip
 echo date
 echo "Build finished"
