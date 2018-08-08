@@ -112,7 +112,9 @@ api.get('/trigger', (req, res, next) => {
 
         console.log(`remote version ${body}`);
 
-        fs.unlinkSync('./out.txt');
+        try {
+          fs.unlinkSync('./out.txt');
+        } catch (e) {}
 
         const spawnOut = fs.openSync('out.txt', 'a');
         const spawnErr = fs.openSync('out.txt', 'a');
