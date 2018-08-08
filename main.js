@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const compression = require('compression');
 
-const api = require('./routes/api');
+const api = require('./api');
 const app = express();
 
 app.use((req, res, next) => {
