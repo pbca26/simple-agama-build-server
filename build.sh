@@ -1,10 +1,18 @@
 date
 echo "Build started"
+rm -rf public
+mkdir public
+touch public/index.html
 rm -rf agama
 git clone https://github.com/komodoplatform/agama
+cp version agama
+cp version_build agama
 cd agama
 git checkout dev
-./binary_artifacts.sh
+mkdir assets/bin
+mkdir assets/bin/linux64
+cp ../komodod/komodod assets/bins/linux64
+cp ../komodod/komodo-cli assets/bins/linux64
 npm install
 cd gui
 git clone https://github.com/KomodoPlatform/EasyDEX-GUI
@@ -37,6 +45,6 @@ rm patch.zip
 cd ../../../
 zip -r Agama-linux-x64 Agama-linux-x64
 mv Agama-linux-x64.zip ../../public/Agama-linux-x64-v$1.zip
-curl http://:/api/update
+curl http://127.0.0.1:9090/api/update
 date
 echo "Build finished"

@@ -45,13 +45,14 @@ api.get('/update', (req, res, next) => {
     if (response &&
         response.statusCode &&
         response.statusCode === 200) {
+      const _buildIncrement = Number(fs.readFileSync('./increment', 'utf8'));
       const _html =
         `<html>
           <head>
             <title>Agama Linux Test Build ${body}</title>
           </head>
           <body>
-            <a href="http://${config.ip}:${config.port}/public/Agama-linux-x64-v${body}.zip">Agama-linux-x64-v${body}.zip</a>
+            <a href="http://${config.ip}:${config.port}/public/Agama-linux-x64-v${body}-build${_buildIncrement}.zip">Agama-linux-x64-v${body}-build${_buildIncrement}.zip</a>
           </body>
         </html>`;
 
@@ -106,6 +107,13 @@ api.get('/trigger', (req, res, next) => {
             }
           });
 
+          let _buildIncrement = Number(fs.readFileSync('./increment', 'utf8'));
+      	  _buildIncrement++;
+
+      	  fs.writeFileSync('./version', `version=${body}-build${_buildIncrement}\n` + 'type=beta\n' + `minversion=${body}-build${_buildIncrement}`);
+      	  fs.writeFileSync('./version_build', `version=${body}-build${_buildIncrement}`);
+          fs.writeFileSync('./increment', _buildIncrement);
+
           const retObj = {
             msg: 'success',
             result: 'build started',
@@ -122,7 +130,7 @@ api.get('/trigger', (req, res, next) => {
           const spawnOut = fs.openSync('out.txt', 'a');
           const spawnErr = fs.openSync('out.txt', 'a');
 
-          spawn('./build.sh', [body], {
+          spawn('./build.sh', [`${body}-build${_buildIncrement}`], {
             stdio: [
               'ignore',
               spawnOut,
