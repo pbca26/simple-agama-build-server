@@ -5,14 +5,16 @@ mkdir public
 touch public/index.html
 rm -rf agama
 git clone https://github.com/komodoplatform/agama
+cd agama
+git checkout dev
+cd ../
 cp version agama
 cp version_build agama
 cd agama
-git checkout dev
 mkdir assets/bin
 mkdir assets/bin/linux64
-cp ../komodod/komodod assets/bins/linux64
-cp ../komodod/komodo-cli assets/bins/linux64
+cp ../komodod/komodod assets/bin/linux64
+cp ../komodod/komodo-cli assets/bin/linux64
 npm install
 cd gui
 git clone https://github.com/KomodoPlatform/EasyDEX-GUI
